@@ -18,16 +18,15 @@ in vec4 v_position;
 in vec4 v_normal;
 
 // This is where the final pixel color is output.
-// Here, we are only interested in the first 3 dimensions (xyz).
-// The 4th entry in this vector is for "alpha blending" which we
-// do not require you to know about. For now, just set the alpha
-// to 1.
 out vec4 out_color;
 
 void main() {
-  // YOUR CODE HERE
-  
-  // (Placeholder code. You will want to replace it.)
-  out_color = (vec4(1, 1, 1, 0) + v_normal) / 2;
-  out_color.a = 1;
+  // Diffuse shading: L_d = k_d * (I / r^2) * max(0, n . l)
+  vec3 n = normalize(v_normal.xyz);
+  vec3 l = normalize(u_light_pos - v_position.xyz);
+  float r = length(u_light_pos - v_position.xyz);
+
+  vec3 L_d = u_color.rgb * (u_light_intensity / (r * r)) * max(0.0, dot(n, l));
+
+  out_color = vec4(L_d, 1.0);
 }

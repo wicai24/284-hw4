@@ -13,9 +13,5 @@ in vec2 v_uv;
 out vec4 out_color;
 
 void main() {
-  // YOUR CODE HERE
-  
-  // (Placeholder code. You will want to replace it.)
-  out_color = (vec4(1, 1, 1, 0) + v_normal) / 2;
-  out_color.a = 1;
+  out_color = texture(u_texture_1, v_uv);
 }

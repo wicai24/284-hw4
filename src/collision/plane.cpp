@@ -11,8 +11,24 @@ using namespace CGL;
 #define SURFACE_OFFSET 0.0001
 
 void Plane::collide(PointMass &pm) {
-  // TODO (Part 3): Handle collisions with planes.
+  double d_current = dot(pm.position - point, normal);
+  double d_last = dot(pm.last_position - point, normal);
 
+  // Check if point mass crossed the plane (different sides or on surface)
+  if (d_current * d_last <= 0) {
+    // Tangent point: project current position onto plane
+    Vector3D tangent = pm.position - d_current * normal;
+
+    // Apply surface offset on the side where last_position was
+    double sign = (d_last >= 0) ? 1.0 : -1.0;
+    tangent += sign * SURFACE_OFFSET * normal;
+
+    // Correction vector
+    Vector3D correction = tangent - pm.last_position;
+
+    // Apply with friction
+    pm.position = pm.last_position + correction * (1.0 - friction);
+  }
 }
 
 void Plane::render(GLShader &shader) {
